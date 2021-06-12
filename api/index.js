@@ -2,6 +2,7 @@ const express = require('express') //pede o express
 const app = express() //define o app como uma função express
 const config = require('config') //puxa a conifig do arquivo config
 const roteador = require('./rotas/fornecedores') //puxa o rotador 
+const roteadorv2 = require('./rotas/fornecedores') 
 const NaoEncontrado = require('./erros/NaoEncontrado')
 const CampoInvalido = require('./erros/CampoInvalido')
 const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos')
@@ -27,7 +28,14 @@ app.use((requisicao, resposta, proximo) => {
     proximo()
 })
 
+app.use((requisicao, resposta, proximo) => {
+    resposta.set('Access-Control-Allow-Origin', '*')
+    proximo()
+})
+
 app.use('/api/fornecedores', roteador) //
+
+app.use('/api/v2/fornecedores', roteadorv2)
 
 app.use((erro, requisicao, resposta, proximo) => {
     let status = 500
